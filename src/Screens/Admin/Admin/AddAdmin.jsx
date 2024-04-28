@@ -14,7 +14,7 @@ const AddAdmin = () => {
     email: "",
     phoneNumber: "",
     gender: "",
-    role: "admin",
+    role:"admin"
   });
   const [previewImage, setPreviewImage] = useState("");
 
@@ -40,7 +40,7 @@ const AddAdmin = () => {
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("gender", data.gender);
     formData.append("profile", file);
-    formData.append("role", data.role);
+    formData.append("role",data.role);
     axios
       .post(`${baseApiURL()}/admin/details/addDetails`, formData, {
         headers: headers,
@@ -52,10 +52,10 @@ const AddAdmin = () => {
           const jsonData = {
           "loginid":data.employeeId,
           "password": "123456",
-          "role": "admin"
+          "role":"admin"
           }
           axios
-            .post(`${baseApiURL()}/Admin/auth/register`, jsonData, {
+            .post(`${baseApiURL()}/user/auth/register`, jsonData, {
               headers: {
                 "Content-Type": "application/json",
               },
@@ -74,6 +74,7 @@ const AddAdmin = () => {
                   phoneNumber: "",
                   gender: "",
                   profile: "",
+                  role:"admin"
                 });
               } else {
                 toast.error(response.data.message);

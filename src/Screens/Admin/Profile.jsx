@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { setUserData } from "../../redux/actions";
 import { baseApiURL } from "../../baseUrl";
+// import bcrypt from "bcrypt";
 import toast from "react-hot-toast";
 const Profile = () => {
   const [showPass, setShowPass] = useState(false);
@@ -20,7 +21,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/${router.state.type}/details/getDetails`,
+        `${baseApiURL()}/admin/details/getDetails`,
         { employeeId: router.state.loginid },
         {
           headers: headers,
@@ -53,14 +54,16 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/student/auth/login`,
+        `${baseApiURL()}/user/auth/login`,
         { loginid: router.state.loginid, password: password.current },
         {
           headers: headers,
         }
       )
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.success) {
+          // const hashedPassword = await bcrypt.hash(password.new, 10)
+          setPassword({ ...password, new: password.new });
           changePasswordHandler(response.data.id);
         } else {
           toast.error(response.data.message);
@@ -77,9 +80,9 @@ const Profile = () => {
       "Content-Type": "application/json",
     };
     axios
-      .put(
-        `${baseApiURL()}/student/auth/update/${id}`,
-        { loginid: router.state.loginid, password: password.new },
+      .post(
+        `${baseApiURL()}/user/auth/chnagepassword/${id}`,
+        { newPassword: password.new },
         {
           headers: headers,
         }

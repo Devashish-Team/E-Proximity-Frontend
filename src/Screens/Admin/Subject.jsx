@@ -148,12 +148,12 @@ const Subjects = () => {
                     <div>
                       {item.code} - {item.name}
                     </div>
-                    <button
+                    {/* <button
                       className="text-2xl hover:text-red-500"
                       onClick={() => deleteSubjectHandler(item._id)}
                     >
                       <MdOutlineDelete />
-                    </button>
+                    </button> */}
                   </li>
                 );
               })}

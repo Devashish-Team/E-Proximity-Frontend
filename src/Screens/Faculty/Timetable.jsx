@@ -117,9 +117,10 @@ const [endTime, setEndTime] = useState("");
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
+
           setAddSelected({
-            branch: "",
-            semester: "",
+            branch: addselected["branch"],
+            semester: addselected["semester"] ,
             timetable: {
               monday: [],
               tuesday: [],
@@ -128,6 +129,7 @@ const [endTime, setEndTime] = useState("");
               friday: [],
             },
           });
+          // window.location.reload();
         } else {
           toast.error(response.data.message);
         }

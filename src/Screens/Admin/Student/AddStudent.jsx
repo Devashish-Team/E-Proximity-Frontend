@@ -18,6 +18,7 @@ const AddStudent = () => {
     semester: "",
     branch: "",
     gender: "",
+    role:"student"
   });
   const getBranchData = () => {
     const headers = {
@@ -48,7 +49,7 @@ const AddStudent = () => {
     setPreviewImage(imageUrl);
   };
 
-  const addStudentProfile = (e) => {
+  const addStudentProfile = async (e) => {
     e.preventDefault();
     toast.loading("Adding Student");
     const headers = {
@@ -65,24 +66,39 @@ const AddStudent = () => {
     formData.append("branch", data.branch);
     formData.append("gender", data.gender);
     formData.append("profile", file);
+    formData.append("role", data.role);
+
+    const apiUrl = "http://127.0.0.1:8000/sendInviteMail";
+    const password = "123456";
+    const requestData = {
+      loginId :data.enrollmentNo,
+      email: data.email,
+      password: password,
+    };
+    console.log("data:", requestData);
+
+ 
+
+    const jsonData={
+      "loginid":data.enrollmentNo,
+      "password":password,
+      "role":"student"
+    }
     axios
-      .post(`${baseApiURL()}/student/details/addDetails`, formData, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-        const jsonData={
-          "loginid":data.enrollmentNo,
-          "password":"123456"
-        }
-          axios
-            .post(`${baseApiURL()}/student/auth/register`, jsonData, {
+            .post(`${baseApiURL()}/user/auth/register`, jsonData, {
               headers: {
                 "Content-Type": "application/json",
               },
             })
+      .then((response) => {
+        toast.dismiss();
+        if (response.data.success) {
+          toast.success(response.data.message);
+    
+        axios
+        .post(`${baseApiURL()}/student/details/addDetails`, formData, {
+          headers: headers,
+        })
             .then((response) => {
               toast.dismiss();
               if (response.data.success) {
@@ -99,8 +115,26 @@ const AddStudent = () => {
                   branch: "",
                   gender: "",
                   profile: "",
+                  role:"student"
                 });
                 setPreviewImage();
+                try {
+                  const postData =async()=>{ 
+                  const apiResponse = await axios.post(apiUrl, requestData);
+                  console.log("API Response:", apiResponse);
+                  if (apiResponse.status === 200) {
+                    toast.success(`New User Registered. Mail Sent`);
+                  } else {
+                    toast.error("Failed to send invite email");
+                  }}
+                  postData()
+                } catch (error) {
+                  console.error(
+                    "Error calling API:",
+                    error.response ? error.response.data : error.message
+                  );
+                  toast.error("Failed to send invite email");
+                }
               } else {
                 toast.error(response.data.message);
               }

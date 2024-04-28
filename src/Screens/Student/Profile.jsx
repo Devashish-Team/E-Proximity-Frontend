@@ -20,7 +20,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/${router.state.type}/details/getDetails`,
+        `${baseApiURL()}/student/details/getDetails`,
         { enrollmentNo: router.state.loginid },
         {
           headers: headers,
@@ -53,7 +53,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/student/auth/login`,
+        `${baseApiURL()}/user/auth/login`,
         { loginid: router.state.loginid, password: password.current },
         {
           headers: headers,
@@ -77,9 +77,9 @@ const Profile = () => {
       "Content-Type": "application/json",
     };
     axios
-      .put(
-        `${baseApiURL()}/student/auth/update/${id}`,
-        { loginid: router.state.loginid, password: password.new },
+      .post(
+        `${baseApiURL()}/user/auth/chnagepassword/${id}`,
+        { newPassword: password.new },
         {
           headers: headers,
         }

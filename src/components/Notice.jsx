@@ -302,7 +302,7 @@ const Notice = () => {
               onChange={(e) => setData({ ...data, link: e.target.value })}
             />
           </div>
-          <div className="w-[40%] mt-4">
+          {/* <div className="w-[40%] mt-4">
             <label htmlFor="type">Type Of Notice</label>
             <select
               id="type"
@@ -314,7 +314,7 @@ const Notice = () => {
               <option value="faculty">Faculty</option>
               <option value="both">Both</option>
             </select>
-          </div>
+          </div> */}
           {edit && (
             <button
               onClick={updateNoticehandler}

@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { baseApiURL } from "../../baseUrl";
 const Material = () => {
   const { fullname } = useSelector((state) => state.userData);
+  const [previewImage, setPreviewImage] = useState("");   
   const [subject, setSubject] = useState();
   const [file, setFile] = useState();
   const [selected, setSelected] = useState({
@@ -16,7 +17,6 @@ const Material = () => {
     subject: "",
     faculty: fullname.split(" ")[0] + " " + fullname.split(" ")[2],
   });
-
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
@@ -57,6 +57,7 @@ const Material = () => {
             title: "",
             subject: "",
             faculty: fullname.split(" ")[0] + " " + fullname.split(" ")[2],
+             link: "your link value here",
           });
           setFile("");
         } else {
@@ -67,6 +68,20 @@ const Material = () => {
         toast.dismiss();
         toast.error(error.response.data.message);
       });
+  };
+  console.log(selected.link);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  
+    // Check if the file is an image
+    if (selectedFile && selectedFile.type.startsWith('image/')) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewImage(imageUrl);
+    } else {
+      // If it's not an image, set the preview to the file name
+      setPreviewImage(selectedFile.name);
+    }
   };
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
@@ -138,8 +153,17 @@ const Material = () => {
             name="upload"
             id="upload"
             hidden
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={handleFileChange}
           />
+          {previewImage && (
+  <div className="w-full flex justify-center items-center">
+    {previewImage.startsWith('blob:') ? (
+      <img src={previewImage} alt="student" className="h-36" />
+    ) : (
+      <p>{previewImage}</p>
+    )}
+  </div>
+)}
           <button
             className="bg-blue-500 text-white mt-8 px-4 py-2 rounded-sm"
             onClick={addMaterialHandler}

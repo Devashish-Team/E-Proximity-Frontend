@@ -18,6 +18,7 @@ const AddFaculty = () => {
     gender: "",
     experience: "",
     post: "",
+    role: "faculty",
   });
   const [previewImage, setPreviewImage] = useState("");
   const getBranchData = () => {
@@ -67,6 +68,16 @@ const AddFaculty = () => {
     formData.append("gender", data.gender);
     formData.append("post", data.post);
     formData.append("profile", file);
+    formData.append("role", data.role);
+
+    const apiUrl = "http://127.0.0.1:8000/sendInviteMail";
+    const password = 123456;
+    const requestData = {
+      loginId :data.employeeId,
+      email: data.email,
+      password: password,
+    };
+    
     axios
       .post(`${baseApiURL()}/faculty/details/addDetails`, formData, {
         headers: headers,
@@ -79,9 +90,10 @@ const AddFaculty = () => {
           const jsonData = {
             "loginid": data.employeeId,
             "password": "123456",
+            "role": "faculty",
           };
           axios
-            .post(`${baseApiURL()}/faculty/auth/register`, jsonData, {
+            .post(`${baseApiURL()}/user/auth/register`, jsonData, {
               headers: {
                 "Content-Type": "application/json",
               },
@@ -104,6 +116,23 @@ const AddFaculty = () => {
                   experience: "",
                   post: "",
                 });
+                try {
+                  const postData =async()=>{ 
+                  const apiResponse = await axios.post(apiUrl, requestData);
+                  console.log("API Response:", apiResponse);
+                  if (apiResponse.status === 200) {
+                    toast.success(`New User Registered. Mail Sent`);
+                  } else {
+                    toast.error("Failed to send invite email");
+                  }}
+                  postData()
+                } catch (error) {
+                  console.error(
+                    "Error calling API:",
+                    error.response ? error.response.data : error.message
+                  );
+                  toast.error("Failed to send invite email");
+                }
               } else {
                 toast.error(response.data.message);
               }

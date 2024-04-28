@@ -147,7 +147,7 @@ const Home = () => {
               >
                 Subjects
               </li>
-              <li
+              {/* <li
                 className={`text-center rounded-sm px-4 py-2 w-1/5 cursor-pointer ease-linear duration-300 hover:ease-linear hover:duration-300 hover:transition-all transition-all ${
                   selectedMenu === "Admin"
                     ? "border-b-2 pb-2 border-blue-500 bg-blue-100 rounded-sm"
@@ -156,7 +156,7 @@ const Home = () => {
                 onClick={() => setSelectedMenu("Admin")}
               >
                 Admins
-              </li>
+              </li> */}
             </ul>
 
             <>

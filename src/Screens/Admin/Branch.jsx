@@ -7,6 +7,8 @@ import { baseApiURL } from "../../baseUrl";
 const Branch = () => {
   const [data, setData] = useState({
     name: "",
+    branchCode: "",
+    flag: true,
   });
   const [selected, setSelected] = useState("add");
   const [branch, setBranch] = useState();
@@ -81,6 +83,36 @@ const Branch = () => {
         });
     }
   };
+
+  const deactivateBranchHandler = (id) => {
+    const alert = prompt("Are You Sure? Type CONFIRM to continue");
+    if (alert === "CONFIRM") {
+      toast.loading("Deactivating Branch");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .put(
+          `${baseApiURL()}/branch/deactivateBranch/${id}`,
+          {},
+          { headers: headers }
+        )
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            getBranchHandler();
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
+  };
+
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
       <div className="flex justify-between items-center w-full">
@@ -105,7 +137,20 @@ const Branch = () => {
         </div>
       </div>
       {selected === "add" && (
+        
         <div className="flex flex-col justify-center items-center w-full mt-8">
+          <div className="w-[40%] mb-4">
+            <label htmlFor="code" className="leading-7 text-sm">
+              Enter Branch Code
+            </label>
+            <input
+              type="branchCode"
+              id="code"
+              value={data.branchCode}
+              onChange={(e) => setData({ ...data, branchCode: e.target.value })}
+              className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />
+          </div>
           <div className="w-[40%]">
             <label htmlFor="name" className="leading-7 text-sm ">
               Enter Branch Name
@@ -139,7 +184,8 @@ const Branch = () => {
                     <div>{item.name}</div>
                     <button
                       className="text-2xl hover:text-red-500"
-                      onClick={() => deleteBranchHandler(item._id)}
+                      onClick={() => deactivateBranchHandler(item._id)}
+                      // onClick={() => deleteBranchHandler(item._id)}
                     >
                       <MdOutlineDelete />
                     </button>
